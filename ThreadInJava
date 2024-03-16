@@ -1,0 +1,45 @@
+class Book {
+    static int value = 0;
+
+    public synchronized void write(String name) {
+        for (int i = 0; i < 10; i++) {
+            value++;
+            System.out.println(name + " " + value);
+
+        }
+
+    }
+}
+
+class hex implements Runnable {
+    Book b1;
+
+    hex(Book b) {
+        this.b1 = b;
+    }
+
+    public void run() {
+        b1.write(Thread.currentThread().getName());
+        // System.out.println(Thread.currentThread().getName());
+
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Book b1 = new Book();
+        hex h1 = new hex(b1);
+        Thread th1 = new Thread(h1);
+        Thread th2 = new Thread(h1);
+        Thread th3 = new Thread(h1);
+        th1.start();
+        th2.start();
+        th3.start();
+        th1.join();
+        th2.join();
+        th3.join();
+        System.out.println(Book.value);
+
+    }
+
+}
